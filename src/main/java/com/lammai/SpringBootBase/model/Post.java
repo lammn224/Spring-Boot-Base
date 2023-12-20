@@ -7,14 +7,13 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.sql.Timestamp;
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "users")
-public class User {
+@Table(name = "posts")
+public class Post {
+
     @Id
     @Column(nullable = false, updatable = false)
     @SequenceGenerator(
@@ -28,20 +27,20 @@ public class User {
     )
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String email;
-
-    @Column(nullable = false, unique = true)
-    private String username;
-
     @Column(nullable = false)
-    private String password;
+    private String title;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "userId", nullable = false)
+    private User user;
 
     @CreationTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false, updatable = false)
-    private Timestamp createdAt;
+    private Long createdAt;
 
     @UpdateTimestamp
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
-    private Timestamp updatedAt;
+    private Long updatedAt;
 }

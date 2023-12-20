@@ -1,4 +1,4 @@
-package com.lammai.SpringBootBase.dto;
+package com.lammai.SpringBootBase.dto.users;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,4 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateUserDto {
     private String email;
+    private String password;
+    private String username;
 }

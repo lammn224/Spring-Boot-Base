@@ -1,42 +1,95 @@
 package com.lammai.SpringBootBase.service;
 
 import com.lammai.SpringBootBase.common.Pagination;
-import com.lammai.SpringBootBase.dto.CreateUserDto;
-import com.lammai.SpringBootBase.dto.UpdateUserDto;
+import com.lammai.SpringBootBase.common.PaginationHelper;
+import com.lammai.SpringBootBase.dto.users.CreateUserDto;
+import com.lammai.SpringBootBase.dto.users.UpdateUserDto;
+import com.lammai.SpringBootBase.dto.users.UserMapper;
+import com.lammai.SpringBootBase.dto.users.UserResponseDto;
+import com.lammai.SpringBootBase.exeption.BadRequestException;
+import com.lammai.SpringBootBase.exeption.NotFoundException;
 import com.lammai.SpringBootBase.model.User;
-import com.lammai.SpringBootBase.repository.UserRepository;
+import com.lammai.SpringBootBase.repository.JpaUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.lammai.SpringBootBase.constant.ErrorCodeMessages.*;
 
 @Service
 @AllArgsConstructor
 public class UserService {
     @Autowired
-    private final UserRepository userRepository;
+    private final JpaUserRepository jpaUserRepository;
+    @Autowired
+    private final PaginationHelper paginationHelper;
 
-    public User findUserById(Integer id) {
-        return userRepository.findUserById(id);
+    public UserResponseDto creatUser(CreateUserDto createUserDto) {
+        boolean existingUsername = this.jpaUserRepository.existsByUsername(createUserDto.getUsername());
+        boolean existingEmail = this.jpaUserRepository.existsByEmail(createUserDto.getEmail());
+
+        if(existingUsername){
+            throw new BadRequestException(USERNAME_ALREADY_EXIST);
+        } else if (existingEmail) {
+            throw new BadRequestException(EMAIL_ALREADY_EXIST);
+        }
+
+        User newUser = jpaUserRepository.save(UserMapper.INSTANCE.createUser(createUserDto));
+
+        return UserMapper.INSTANCE.userResponse(newUser);
     }
 
-    public User creatUser(CreateUserDto createUserDto) {
-        return userRepository.creatUser(createUserDto);
+    public UserResponseDto updateUser(Long id, UpdateUserDto updateUserDto) {
+        User existingUser = this.jpaUserRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_EXIST));
+
+        boolean existingUsername = this.jpaUserRepository.existsByUsernameNotId(updateUserDto.getUsername(), id);
+        boolean existingEmail = this.jpaUserRepository.existsByEmailNotId(updateUserDto.getEmail(), id);
+
+        if(existingUsername){
+            throw new BadRequestException(USERNAME_ALREADY_EXIST);
+        } else if (existingEmail) {
+            throw new BadRequestException(EMAIL_ALREADY_EXIST);
+        }
+
+        UserMapper.INSTANCE.updateUser(updateUserDto, existingUser);
+        User updatedUser = jpaUserRepository.save(existingUser);
+
+        return UserMapper.INSTANCE.userResponse(updatedUser);
     }
 
-    public User updateUserById(Integer id, UpdateUserDto updateUserDto) {
-        this.findUserById(id);
-
-        return userRepository.updateUserById(id, updateUserDto);
+    public UserResponseDto findById(Long id) {
+        User user = jpaUserRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_EXIST));
+        return UserMapper.INSTANCE.userResponse(user);
     }
 
-    public List<User> findAllUsers() {
-        return userRepository.findAllUsers();
+    public User findByUsername(String username) {
+        User user = jpaUserRepository.findByUsername(username);
+
+        return user;
     }
 
-    public Pagination<User> findAllUsersPaging(int size, int page, String sortBy, String sortType) {
-        int offset = page * size - size;
-        return userRepository.findAllUsersPaging(size, offset, sortBy, sortType);
+    public List<UserResponseDto> findAllUsers() {
+        List<User> users = jpaUserRepository.findAllUsers();
+
+        List<UserResponseDto> res = users.stream()
+                .map(UserMapper.INSTANCE::userResponse)
+                .collect(Collectors.toList());
+
+        return res;
+    }
+
+    public Pagination<UserResponseDto> findAllUsersPaging(int size, int page, String sortBy, String sortType) {
+        Pagination<User> userPagination = paginationHelper.getPage(jpaUserRepository, size, page, sortBy, sortType);
+
+        List<UserResponseDto> userResponseDtoList = userPagination.getData().stream()
+                .map(UserMapper.INSTANCE::userResponse)
+                .collect(Collectors.toList());
+
+        return new Pagination<>(userResponseDtoList, userPagination.getTotalElements());
     }
 }

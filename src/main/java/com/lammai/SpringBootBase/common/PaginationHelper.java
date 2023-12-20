@@ -1,47 +1,42 @@
 package com.lammai.SpringBootBase.common;
 
 import lombok.AllArgsConstructor;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-
+@Service
 @AllArgsConstructor
-public class PaginationHelper<T> {
+public class PaginationHelper {
+    public <T> Pagination<T> getPage(JpaRepository<T, Long> jpaRepository, int size, int page, String sortBy, String sortType) {
+        Pageable pageable = createPageable(size, page, sortBy, sortType);
+        Page<T> entityPage = jpaRepository.findAll(pageable);
 
-    private final JdbcTemplate jdbcTemplate;
+        List<T> entities = entityPage.getContent();
+        long totalElements = entityPage.getTotalElements();
 
-    public Pagination<T> getPage(String sql, int size, int offset, String sortBy, String sortType, RowMapper<T> rowMapper) {
-        Long totalElements = countRows(sql);
-        String orderBySql;
-
-        if(sortBy != null) {
-            if(sortType != null && sortType.equalsIgnoreCase("desc")) {
-                orderBySql = " ORDER BY " + sortBy + " DESC ";
-            } else {
-                orderBySql = " ORDER BY " + sortBy + " ASC ";
-            }
-
-            sql = sql + orderBySql;
-        }
-
-        sql = sql + " LIMIT ? OFFSET ? ";
-
-        List<T> data = jdbcTemplate.query(
-                sql,
-                rowMapper,
-                size, offset
-        );
-
-        return new Pagination<>(data, totalElements);
+        return new Pagination<>(entities, totalElements);
     }
 
-    private Long countRows(String sql) {
-        return jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM (" + sql + ") AS totalElements",
-                Long.class
-        );
+    private Pageable createPageable(int size, int page, String sortBy, String sortType) {
+        Pageable pageable;
+
+        if (sortBy != null) {
+            if (sortType != null && sortType.equalsIgnoreCase("desc")) {
+                pageable = PageRequest.of(page - 1, size, Sort.by(sortBy).descending());
+            } else {
+                pageable = PageRequest.of(page - 1, size, Sort.by(sortBy).ascending());
+            }
+        } else {
+            pageable = PageRequest.of(page - 1, size);
+        }
+
+        return pageable;
     }
 }
 

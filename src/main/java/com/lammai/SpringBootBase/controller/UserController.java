@@ -1,9 +1,9 @@
 package com.lammai.SpringBootBase.controller;
 
 import com.lammai.SpringBootBase.common.Pagination;
-import com.lammai.SpringBootBase.dto.CreateUserDto;
-import com.lammai.SpringBootBase.dto.UpdateUserDto;
-import com.lammai.SpringBootBase.model.User;
+import com.lammai.SpringBootBase.dto.users.CreateUserDto;
+import com.lammai.SpringBootBase.dto.users.UpdateUserDto;
+import com.lammai.SpringBootBase.dto.users.UserResponseDto;
 import com.lammai.SpringBootBase.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,38 +25,38 @@ public class UserController {
     @Autowired
     private final UserService userService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<User>> findAllUsers() {
-        List<User> users = userService.findAllUsers();
-        return new ResponseEntity<>(users, HttpStatus.OK);
-    }
-
     @PostMapping("")
-    public ResponseEntity<User> creatUser(@RequestBody CreateUserDto createUserDto) {
-        User user = userService.creatUser(createUserDto);
+    public ResponseEntity<UserResponseDto> creatUser(@RequestBody CreateUserDto createUserDto) {
+        UserResponseDto user = userService.creatUser(createUserDto);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUserById(@PathVariable Integer id, @RequestBody UpdateUserDto updateUserDto) {
-        User user = userService.updateUserById(id, updateUserDto);
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UpdateUserDto updateUserDto) {
+        UserResponseDto user = userService.updateUser(id, updateUserDto);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> findUserById(@PathVariable Integer id) {
-        User user = userService.findUserById(id);
+    public ResponseEntity<UserResponseDto> findById(@PathVariable Long id) {
+        UserResponseDto user = userService.findById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<UserResponseDto>> findAllUsers() {
+        List<UserResponseDto> users = userService.findAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
     @GetMapping("")
-    public ResponseEntity<Pagination<User>> findAllUsersPaging(
-            @RequestParam(name = "size", defaultValue = "10") @Min(10) Integer size,
+    public ResponseEntity<Pagination<UserResponseDto>> findAllUsersPaging(
+            @RequestParam(name = "size", defaultValue = "4") @Min(4) Integer size,
             @RequestParam(name = "page", defaultValue = "1") @Min(1) Integer page,
             @RequestParam(name = "sorBy", required = false) String sortBy,
             @RequestParam(name = "sortType", defaultValue = "", required = false) String sortType
     ) {
-        Pagination<User> result = userService.findAllUsersPaging(size, page, sortBy, sortType);
+        Pagination<UserResponseDto> result = userService.findAllUsersPaging(size, page, sortBy, sortType);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
