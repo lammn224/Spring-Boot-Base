@@ -3,10 +3,10 @@
 
 ## Technologies
 - Java (17)
-- Spring Boot (v3.2.0)
-- Spring Data JDBC
+- Spring Boot 3
+- Spring Data JPA
 - Spring Validation
-- Spring Security + JWT Token
+- Spring Security 6 + JWT Token
 - PostgreSQL
 - Mapstruct
 - Lombok

@@ -68,7 +68,8 @@ public class UserService {
     }
 
     public User findByUsername(String username) {
-        User user = jpaUserRepository.findByUsername(username);
+        User user = jpaUserRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_EXIST));
 
         return user;
     }

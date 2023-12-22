@@ -1,5 +1,6 @@
 package com.lammai.SpringBootBase.model;
 
+import com.lammai.SpringBootBase.common.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,6 +37,10 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
