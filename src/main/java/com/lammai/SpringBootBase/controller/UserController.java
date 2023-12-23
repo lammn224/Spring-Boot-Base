@@ -8,9 +8,7 @@ import com.lammai.SpringBootBase.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,10 +19,8 @@ import java.util.List;
 @RequestMapping("/users")
 @Tag(name = "User Controller")
 @SecurityRequirement(name = "Bearer Authentication")
-//@AllArgsConstructor
 @RequiredArgsConstructor
 public class UserController {
-//    @Autowired
     private final UserService userService;
 
     @PostMapping("")

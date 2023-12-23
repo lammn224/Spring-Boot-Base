@@ -1,7 +1,8 @@
 package com.lammai.SpringBootBase.config;
 
+import com.lammai.SpringBootBase.exeption.NotFoundException;
+import com.lammai.SpringBootBase.model.User;
 import com.lammai.SpringBootBase.repository.JpaUserRepository;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +26,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> jpaUserRepository.findByEmail(username)
-                    .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_EXIST));
+                    .orElseThrow(() -> new NotFoundException(USER_NOT_EXIST));
     }
 
     @Bean

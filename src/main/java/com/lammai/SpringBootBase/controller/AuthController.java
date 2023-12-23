@@ -4,9 +4,7 @@ import com.lammai.SpringBootBase.dto.auth.LoginDto;
 import com.lammai.SpringBootBase.dto.auth.LoginResponse;
 import com.lammai.SpringBootBase.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,16 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @Tag(name = "Auth Controller")
-//@AllArgsConstructor
 @RequiredArgsConstructor
 public class AuthController {
-//    @Autowired
     private final AuthService authService;
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginDto loginDto) {
         LoginResponse loginResponse = authService.login(loginDto);
-        System.out.println(loginDto);
         return new ResponseEntity<>(loginResponse, HttpStatus.CREATED);
     }
 

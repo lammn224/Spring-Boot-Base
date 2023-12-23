@@ -10,8 +10,7 @@ import com.lammai.SpringBootBase.exeption.BadRequestException;
 import com.lammai.SpringBootBase.exeption.NotFoundException;
 import com.lammai.SpringBootBase.model.User;
 import com.lammai.SpringBootBase.repository.JpaUserRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +20,9 @@ import java.util.stream.Collectors;
 import static com.lammai.SpringBootBase.constant.ErrorCodeMessages.*;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
-    @Autowired
     private final JpaUserRepository jpaUserRepository;
-    @Autowired
     private final PaginationHelper paginationHelper;
     private final PasswordEncoder passwordEncoder;
 
