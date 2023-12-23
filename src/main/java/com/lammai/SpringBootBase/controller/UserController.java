@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +21,15 @@ import java.util.List;
 @RequestMapping("/users")
 @Tag(name = "User Controller")
 @SecurityRequirement(name = "Bearer Authentication")
-@AllArgsConstructor
+//@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
+//    @Autowired
     private final UserService userService;
 
     @PostMapping("")
-    public ResponseEntity<UserResponseDto> creatUser(@RequestBody CreateUserDto createUserDto) {
-        UserResponseDto user = userService.creatUser(createUserDto);
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody CreateUserDto createUserDto) {
+        UserResponseDto user = userService.createUser(createUserDto);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 

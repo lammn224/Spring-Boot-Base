@@ -32,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        if(request.getRequestURI().contains("/auth/login")) {
+        if(request.getRequestURI().contains("/auth/login") || request.getRequestURI().contains("/users")) {
             filterChain.doFilter(request,response);
             return;
         }

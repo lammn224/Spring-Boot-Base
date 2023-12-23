@@ -5,14 +5,14 @@ import com.lammai.SpringBootBase.dto.auth.LoginResponse;
 import com.lammai.SpringBootBase.model.User;
 import com.lammai.SpringBootBase.security.JwtService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
@@ -20,13 +20,13 @@ public class AuthService {
 
     public LoginResponse login(LoginDto loginDto) {
 
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getUsername(),
                 loginDto.getPassword()
         ));
 
         var user = userService.findByUsername(loginDto.getUsername());
-        String token = jwtService.generateToken((UserDetails) user);
+        String token = jwtService.generateToken(user);
         System.out.println(loginDto.getPassword());
         System.out.println(loginDto.getUsername());
 

@@ -12,6 +12,7 @@ import com.lammai.SpringBootBase.model.User;
 import com.lammai.SpringBootBase.repository.JpaUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,8 +27,9 @@ public class UserService {
     private final JpaUserRepository jpaUserRepository;
     @Autowired
     private final PaginationHelper paginationHelper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserResponseDto creatUser(CreateUserDto createUserDto) {
+    public UserResponseDto createUser(CreateUserDto createUserDto) {
         boolean existingUsername = this.jpaUserRepository.existsByUsername(createUserDto.getUsername());
         boolean existingEmail = this.jpaUserRepository.existsByEmail(createUserDto.getEmail());
 
@@ -36,6 +38,8 @@ public class UserService {
         } else if (existingEmail) {
             throw new BadRequestException(EMAIL_ALREADY_EXIST);
         }
+
+        createUserDto.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
 
         User newUser = jpaUserRepository.save(UserMapper.INSTANCE.createUser(createUserDto));
 
