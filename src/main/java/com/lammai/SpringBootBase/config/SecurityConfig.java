@@ -1,5 +1,7 @@
 package com.lammai.SpringBootBase.config;
 
+import com.lammai.SpringBootBase.security.FilterExceptionFilter;
+import com.lammai.SpringBootBase.security.JwtAuthenticationEntryPoint;
 import com.lammai.SpringBootBase.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,10 +19,15 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
+@EnableMethodSecurity(
+        securedEnabled = true,
+        jsr250Enabled = true
+)
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final FilterExceptionFilter filterExceptionFilter;
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
@@ -28,12 +35,15 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(req ->
-                    req.requestMatchers(WHITE_LIST_URL).permitAll()
-                            .anyRequest()
-                            .authenticated()
-                )
+                        req.requestMatchers(WHITE_LIST_URL).permitAll()
+                                .anyRequest()
+                                .authenticated()
+
+                ).exceptionHandling(exceptionHandling ->
+                        exceptionHandling.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
                 .authenticationProvider(authenticationProvider)
+                .addFilterBefore(filterExceptionFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

@@ -1,5 +1,7 @@
 package com.lammai.SpringBootBase.security;
 
+import com.lammai.SpringBootBase.exception.UnauthorizedException;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,6 +18,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+import static com.lammai.SpringBootBase.constant.ErrorCodeMessages.JWT_EXPIRED;
+import static com.lammai.SpringBootBase.constant.ErrorCodeMessages.JWT_INVALID;
 import static com.lammai.SpringBootBase.constant.SecurityConstant.AUTH_HEADER;
 import static com.lammai.SpringBootBase.constant.SecurityConstant.TOKEN_PREFIX;
 
@@ -31,8 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
-        if(request.getRequestURI().contains("/auth/login") || request.getRequestURI().contains("/users")) {
-            filterChain.doFilter(request,response);
+        if (request.getRequestURI().contains("/auth/login")) {
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -40,13 +44,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String token;
         String username;
 
-        if(authHeader == null || !authHeader.startsWith(TOKEN_PREFIX)) {
-            filterChain.doFilter(request,response);
+        if (authHeader == null || !authHeader.startsWith(TOKEN_PREFIX)) {
+            filterChain.doFilter(request, response);
             return;
         }
 
         token = authHeader.replace(TOKEN_PREFIX, StringUtils.EMPTY);
-        username = jwtService.extractUsername(token);
+
+        try {
+            username = jwtService.extractUsername(token);
+        } catch (ExpiredJwtException ex) {
+            throw new UnauthorizedException(JWT_EXPIRED);
+        } catch (Exception ex) {
+            throw new UnauthorizedException(JWT_INVALID);
+        }
+
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 

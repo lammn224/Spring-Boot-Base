@@ -1,7 +1,11 @@
 package com.lammai.SpringBootBase.dto.users;
 
-import com.lammai.SpringBootBase.model.User;
 import lombok.Data;
 
 @Data
-public class UserResponseDto extends User {}
+public class UserResponseDto {
+    private Long id;
+    private String email;
+    private String username;
+    private String password;
+}
