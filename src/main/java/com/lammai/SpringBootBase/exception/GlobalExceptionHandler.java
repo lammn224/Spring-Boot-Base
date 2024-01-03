@@ -1,6 +1,5 @@
 package com.lammai.SpringBootBase.exception;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -43,14 +42,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), errorMessages.get(ex.getMessage()));
-
-        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
-    }
-
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ErrorResponse> handleUnauthorizedException(ExpiredJwtException ex) {
-        String code = JWT_EXPIRED;
-        ErrorResponse errorResponse = new ErrorResponse(code, errorMessages.get(code));
 
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
