@@ -1,9 +1,11 @@
 package com.lammai.SpringBootBase.controller;
 
+import com.lammai.SpringBootBase.dto.auth.AuthResponse;
 import com.lammai.SpringBootBase.dto.auth.LoginDto;
-import com.lammai.SpringBootBase.dto.auth.LoginResponse;
+import com.lammai.SpringBootBase.dto.auth.RefreshTokenDto;
 import com.lammai.SpringBootBase.service.AuthService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,9 +22,15 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginDto loginDto) {
-        LoginResponse loginResponse = authService.login(loginDto);
-        return new ResponseEntity<>(loginResponse, HttpStatus.CREATED);
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginDto loginDto) {
+        AuthResponse authResponse = authService.login(loginDto);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<AuthResponse> refreshToken(@RequestBody @Valid RefreshTokenDto refreshTokenDto) {
+        AuthResponse authResponse = authService.refreshToken(refreshTokenDto);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 
 //    @PostMapping("/register")

@@ -13,6 +13,8 @@ public class ErrorCodeMessages {
     public static final String VALIDATION_FAILED = "VALIDATION_FAILED";
     public static final String JWT_EXPIRED = "JWT_EXPIRED";
     public static final String JWT_INVALID = "JWT_INVALID";
+    public static final String REFRESH_TOKEN_EXPIRED = "REFRESH_TOKEN_EXPIRED";
+    public static final String REFRESH_TOKEN_INVALID = "REFRESH_TOKEN_INVALID";
 
     static {
         errorMessages.put(USER_NOT_EXIST, "User not found");
@@ -22,6 +24,8 @@ public class ErrorCodeMessages {
         errorMessages.put(ACCESS_DENIED, "Access denied");
         errorMessages.put(JWT_EXPIRED, "JWT expired");
         errorMessages.put(JWT_INVALID, "JWT invalid");
+        errorMessages.put(REFRESH_TOKEN_EXPIRED, "Refresh token expired");
+        errorMessages.put(REFRESH_TOKEN_INVALID, "Refresh token invalid");
     }
 
 }
