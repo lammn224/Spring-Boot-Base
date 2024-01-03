@@ -10,7 +10,7 @@ public class ErrorCodeMessages {
     public static final String EMAIL_ALREADY_EXIST = "EMAIL_ALREADY_EXIST";
     public static final String WRONG_USERNAME_OR_PASSWORD = "WRONG_USERNAME_OR_PASSWORD";
     public static final String ACCESS_DENIED = "ACCESS_DENIED";
-    public static final String UNAUTHORIZED = "UNAUTHORIZED";
+    public static final String VALIDATION_FAILED = "VALIDATION_FAILED";
     public static final String JWT_EXPIRED = "JWT_EXPIRED";
     public static final String JWT_INVALID = "JWT_INVALID";
 
