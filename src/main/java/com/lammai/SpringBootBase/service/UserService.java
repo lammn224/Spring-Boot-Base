@@ -6,12 +6,12 @@ import com.lammai.SpringBootBase.dto.users.CreateUserDto;
 import com.lammai.SpringBootBase.dto.users.UpdateUserDto;
 import com.lammai.SpringBootBase.dto.users.UserMapper;
 import com.lammai.SpringBootBase.dto.users.UserResponseDto;
-import com.lammai.SpringBootBase.exeption.BadRequestException;
-import com.lammai.SpringBootBase.exeption.NotFoundException;
+import com.lammai.SpringBootBase.exception.BadRequestException;
+import com.lammai.SpringBootBase.exception.NotFoundException;
 import com.lammai.SpringBootBase.model.User;
 import com.lammai.SpringBootBase.repository.JpaUserRepository;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,22 +20,23 @@ import java.util.stream.Collectors;
 import static com.lammai.SpringBootBase.constant.ErrorCodeMessages.*;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
-    @Autowired
     private final JpaUserRepository jpaUserRepository;
-    @Autowired
     private final PaginationHelper paginationHelper;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserResponseDto creatUser(CreateUserDto createUserDto) {
+    public UserResponseDto createUser(CreateUserDto createUserDto) {
         boolean existingUsername = this.jpaUserRepository.existsByUsername(createUserDto.getUsername());
         boolean existingEmail = this.jpaUserRepository.existsByEmail(createUserDto.getEmail());
 
-        if(existingUsername){
+        if (existingUsername) {
             throw new BadRequestException(USERNAME_ALREADY_EXIST);
         } else if (existingEmail) {
             throw new BadRequestException(EMAIL_ALREADY_EXIST);
         }
+
+        createUserDto.setPassword(passwordEncoder.encode(createUserDto.getPassword()));
 
         User newUser = jpaUserRepository.save(UserMapper.INSTANCE.createUser(createUserDto));
 
@@ -49,7 +50,7 @@ public class UserService {
         boolean existingUsername = this.jpaUserRepository.existsByUsernameNotId(updateUserDto.getUsername(), id);
         boolean existingEmail = this.jpaUserRepository.existsByEmailNotId(updateUserDto.getEmail(), id);
 
-        if(existingUsername){
+        if (existingUsername) {
             throw new BadRequestException(USERNAME_ALREADY_EXIST);
         } else if (existingEmail) {
             throw new BadRequestException(EMAIL_ALREADY_EXIST);
@@ -68,7 +69,8 @@ public class UserService {
     }
 
     public User findByUsername(String username) {
-        User user = jpaUserRepository.findByUsername(username);
+        User user = jpaUserRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_EXIST));
 
         return user;
     }

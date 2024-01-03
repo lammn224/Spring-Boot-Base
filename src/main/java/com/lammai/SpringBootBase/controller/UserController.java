@@ -7,11 +7,12 @@ import com.lammai.SpringBootBase.dto.users.UserResponseDto;
 import com.lammai.SpringBootBase.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,35 +21,39 @@ import java.util.List;
 @RequestMapping("/users")
 @Tag(name = "User Controller")
 @SecurityRequirement(name = "Bearer Authentication")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
     private final UserService userService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("")
-    public ResponseEntity<UserResponseDto> creatUser(@RequestBody CreateUserDto createUserDto) {
-        UserResponseDto user = userService.creatUser(createUserDto);
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid CreateUserDto createUserDto) {
+        UserResponseDto user = userService.createUser(createUserDto);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UpdateUserDto updateUserDto) {
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody @Valid UpdateUserDto updateUserDto) {
         UserResponseDto user = userService.updateUser(id, updateUserDto);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> findById(@PathVariable Long id) {
         UserResponseDto user = userService.findById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("/all")
     public ResponseEntity<List<UserResponseDto>> findAllUsers() {
         List<UserResponseDto> users = userService.findAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     @GetMapping("")
     public ResponseEntity<Pagination<UserResponseDto>> findAllUsersPaging(
             @RequestParam(name = "size", defaultValue = "4") @Min(4) Integer size,

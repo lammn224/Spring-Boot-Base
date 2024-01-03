@@ -1,4 +1,4 @@
-package com.lammai.SpringBootBase.exeption;
+package com.lammai.SpringBootBase.exception;
 
 import lombok.AllArgsConstructor;
 
