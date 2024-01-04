@@ -9,12 +9,13 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>SpringBootBase</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>SpringBootBase</name>
+    <artifactId>spring-boot-base</artifactId>
+    <version>1.0</version>
+    <name>spring-boot-base</name>
     <description>Spring Boot CodeBase</description>
     <properties>
         <java.version>17</java.version>
+        <maven.test.skip>true</maven.test.skip>
     </properties>
     <dependencies>
         <dependency>

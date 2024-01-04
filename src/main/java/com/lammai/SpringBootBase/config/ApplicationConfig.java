@@ -18,6 +18,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.lammai.SpringBootBase.constant.ErrorCodeMessages.WRONG_USERNAME_OR_PASSWORD;
+
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
@@ -28,7 +30,7 @@ public class ApplicationConfig {
 
         return username -> {
             User user = jpaUserRepository.findByUsername(username)
-                    .orElseThrow(() -> new BadCredentialsException("WRONG_USERNAME_OR_PASSWORD"));
+                    .orElseThrow(() -> new BadCredentialsException(WRONG_USERNAME_OR_PASSWORD));
 
             List<SimpleGrantedAuthority> grantedAuthorities = new ArrayList<>();
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().toString()));

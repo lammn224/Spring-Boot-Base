@@ -32,6 +32,24 @@
 
 ## Run the Application
 
+### Run locally
+
+- Step 1: Git clone repo
+- Step 2: First you need to make sure that the database is up. Install database (e.g. PostgreSQL)
+- Step 3: Make sure in [*
+  application.properties*](https://github.com/lammn224/Spring-Boot-Base/blob/master/src/main/resources/application.properties)
+  file you are using application-dev (```spring.profiles.active=dev```)
+- Step 4: Run command: ```mvn clean package```
+- Step 5: Navigate to *target* directory, run: ``` java -jar spring-boot-boilerplate.jar ```
+
+### Run with Docker
+
+- Step 1: Make sure in [*
+  application.properties*](https://github.com/lammn224/Spring-Boot-Base/blob/master/src/main/resources/application.properties)
+  file you are using application-dev (```spring.profiles.active=prod```)
+- Step 2: If you're using Docker, you can use ```docker compose up -d``` command. (If you have made changes in local,
+  you should use the *local-docker-compose* file.)
+
 ## Reference
 
 - [Spring Security: Authentication and Authorization In-Depth]
