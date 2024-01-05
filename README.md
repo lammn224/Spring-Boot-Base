@@ -47,7 +47,8 @@
 - Step 1: Make sure in [*
   application.properties*](https://github.com/lammn224/Spring-Boot-Base/blob/master/src/main/resources/application.properties)
   file you are using application-dev (```spring.profiles.active=prod```)
-- Step 2: If you're using Docker, you can use ```docker compose up -d``` command. (If you have made changes in local,
+- Step 2: If you're using Docker, you can use ```docker compose up -d``` command (*docker-compose.yml* is being
+  updated). (If you have made changes in local,
   you should use the *local-docker-compose* file.)
 
 ## Reference

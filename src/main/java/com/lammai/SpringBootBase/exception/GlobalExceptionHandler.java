@@ -1,5 +1,6 @@
 package com.lammai.SpringBootBase.exception;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 import static com.lammai.SpringBootBase.constant.ErrorCodeMessages.*;
 
+@Log4j2
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
@@ -33,7 +35,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorResponse> handleAuthenticationException(AuthenticationException ex) {
-        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), errorMessages.get(ex.getMessage()));
+        log.error(WRONG_USERNAME_OR_PASSWORD);
+        String code = WRONG_USERNAME_OR_PASSWORD;
+        ErrorResponse errorResponse = new ErrorResponse(code, errorMessages.get(code));
 
         return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
