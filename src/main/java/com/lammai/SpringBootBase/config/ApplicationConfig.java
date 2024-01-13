@@ -1,5 +1,6 @@
 package com.lammai.SpringBootBase.config;
 
+import com.lammai.SpringBootBase.interceptors.ContextInterceptor;
 import com.lammai.SpringBootBase.model.User;
 import com.lammai.SpringBootBase.repository.JpaUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +25,13 @@ import static com.lammai.SpringBootBase.constant.ErrorCodeMessages.WRONG_USERNAM
 
 @Configuration
 @RequiredArgsConstructor
-public class ApplicationConfig {
+public class ApplicationConfig implements WebMvcConfigurer {
     private final JpaUserRepository jpaUserRepository;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new ContextInterceptor(jpaUserRepository));
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
