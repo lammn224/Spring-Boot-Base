@@ -49,8 +49,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         ContentCachingResponseWrapper contentCachingResponse = new ContentCachingResponseWrapper(response);
 
         if (request.getRequestURI().contains("/auth/login")) {
-            filterChain.doFilter(contentCachingRequest, contentCachingResponse);
+            filterChain.doFilter(request, response);
             loggingRequest(request, contentCachingRequest);
+            loggingResponse(request, response);
             return;
         }
 
@@ -90,7 +91,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
-        filterChain.doFilter(contentCachingRequest, contentCachingResponse);
+        filterChain.doFilter(request, response);
         loggingRequest(request, contentCachingRequest);
         loggingResponse(request, response);
     }
@@ -100,16 +101,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             String requestBody = getStringValue(contentCachingRequest.getContentAsByteArray(), contentCachingRequest.getCharacterEncoding());
             JSONParser parser = new JSONParser();
-            JSONObject requestBodyJson = (JSONObject) parser.parse(requestBody);
+            JSONObject requestBodyJson;
             if ("GET".equalsIgnoreCase(contentCachingRequest.getMethod())) {
                 requestBody = contentCachingRequest.getParameterMap().entrySet().stream().map(stringEntry -> stringEntry.getKey() + ":" + Arrays.toString(stringEntry.getValue())).collect(Collectors.joining(","));
             }
             if ("POST".equalsIgnoreCase(contentCachingRequest.getMethod())) {
                 if (!requestBody.isEmpty()) {
+                    requestBodyJson = (JSONObject) parser.parse(requestBody);
                     if (requestBodyJson.containsKey("password")) requestBodyJson.put("password", "******");
+
+                    requestBody = requestBodyJson.toJSONString();
                 }
             }
-            requestBody = requestBodyJson.toJSONString();
+
             logger.info("Received request: {} {} with request body {} from {}", request.getMethod(), request.getRequestURI(), requestBody, request.getRemoteAddr());
 
         } catch (IllegalStateException e) {

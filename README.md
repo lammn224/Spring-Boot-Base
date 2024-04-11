@@ -39,7 +39,7 @@
 - Step 3: Make sure in [*
   application.properties*](https://github.com/lammn224/Spring-Boot-Base/blob/master/src/main/resources/application.properties)
   file you are using application-dev (```spring.profiles.active=dev```)
-- Step 4: Run command: ```mvn clean package```
+- Step 4: For building the project using command line, run command: ```mvn clean package```
 - Step 5: Navigate to *target* directory, run: ``` java -jar spring-boot-boilerplate.jar ```
 
 ### Run with Docker
