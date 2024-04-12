@@ -9,6 +9,13 @@ spring:
     hibernate:
       ddl-auto: update
 
+
 #second db
 #spring.datasource.mysql.url= jdbc:postgresql://localhost:5432/postgres
 #spring.datasource.mysql.username= lammai
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /api
+

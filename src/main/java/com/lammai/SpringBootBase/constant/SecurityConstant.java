@@ -19,6 +19,8 @@ public class SecurityConstant {
             "/swagger-ui/**",
             "/webjars/**",
             "/swagger-ui.html",
-            "/auth/**"
+            "/auth/**",
+            "/api-docs/**",
+            "/api"
     };
 }
