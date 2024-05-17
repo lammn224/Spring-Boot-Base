@@ -56,9 +56,27 @@
 - [Spring Security: Authentication and Authorization In-Depth]
 - [Introduction to Spring Method Security]
 - [Quick Guide to MapStruct]
+- [Connect to Kafka running in Docker]
+- [Connect to Kafka running in Docker using Bitnami Image]
 
 [Spring Security: Authentication and Authorization In-Depth]: <https://www.marcobehler.com/guides/spring-security#_authentication_with_spring_security>
 
 [Introduction to Spring Method Security]: <https://www.baeldung.com/spring-security-method-security>
 
 [Quick Guide to MapStruct]: <https://www.baeldung.com/mapstruct>
+
+[Connect to Kafka running in Docker]: <https://stackoverflow.com/questions/51630260/connect-to-kafka-running-in-docker>
+
+[Connect to Kafka running in Docker using Bitnami Image]:<https://github.com/bitnami/containers/tree/main/bitnami/kafka#accessing-apache-kafka-with-internal-and-external-clients>
+
+[1]: http://www.github.com/lammn224
+
+[2]: https://www.linkedin.com/in/lammn
+
+--- 
+
+**Connect with me**
+
+[![github](https://cloud.githubusercontent.com/assets/17016297/18839843/0e06a67a-83d2-11e6-993a-b35a182500e0.png)][1]
+[![linkedin](https://cloud.githubusercontent.com/assets/17016297/18839848/0fc7e74e-83d2-11e6-8c6a-277fc9d6e067.png)][2]
+---
